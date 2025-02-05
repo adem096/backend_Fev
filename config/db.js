@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 module.exports.connectToMongoDb = async () => {
     mongoose.set('strictQuery', false);
-    mongoose.connect('mongodb://localhost:27017/backendFev')
+    mongoose.connect(process.env.MongDb_Url)
         .then(
             () => { console.log("connect to db") }
         )
