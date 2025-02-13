@@ -16,6 +16,22 @@ module.exports.addUserClient = async (req,res) => {
     }
 }
 
+module.exports.addUserClientWithImg = async (req,res) => {
+    try {
+        const {username , email , password } = req.body;
+        const roleClient = 'client'
+        const {filename} = req.file
+
+        const user = await userModel.create({
+            username,email ,password,role :roleClient , user_image : filename
+        })
+        res.status(200).json({user});
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+}
+
+
 module.exports.addUserAdmin= async (req,res) => {
     try {
         const {username , email , password } = req.body;
