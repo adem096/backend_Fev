@@ -7,7 +7,11 @@ const upload = require('../middlewares/uploadFile');
 router.post('/addUserClient',userController.addUserClient); 
 router.post('/addUserAdmin',userController.addUserAdmin);
 router.get('/getAllUsers',userController.getAllUsers); 
-router.get('/getUserById/:id',userController.getUserById); 
+router.get('/getUserById/:id',userController.getUserById);
+router.get('/searchUserByUsername',userController.searchUserByUsername);
+router.get('/getAllUsersSortByAge',userController.getAllUsersSortByAge); 
+ 
+router.put('/updateuserById/:id',userController.updateuserById); 
 
 router.post('/addUserClientWithImg',upload.single("image_user"),userController.addUserClientWithImg);
 

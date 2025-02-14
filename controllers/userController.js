@@ -84,3 +84,50 @@ module.exports.deleteUserById= async (req,res) => {
         res.status(500).json({message: error.message});
     }
 }
+
+module.exports.updateuserById = async (req, res) => {
+    try {
+        const {id} = req.params
+        const {email , username} = req.body;
+    
+        await userModel.findByIdAndUpdate(id,{$set : {email , username }})
+        const updated = await userModel.findById(id)
+    
+        res.status(200).json({updated})
+    } catch (error) {
+        res.status(500).json({message: error.message});
+    }
+    }
+
+    module.exports.searchUserByUsername = async (req, res) => {
+        try {
+    
+            const { username } = req.query
+            if(!username){
+                throw new Error("Veuillez fournir un nom pour la recherche.");
+            }
+    
+            const userListe = await userModel.find({
+                username: {$regex: username , $options: "i"}
+            })
+    
+            if (!userListe) {
+                throw new Error("User not found");
+              }
+              const count = userListe.length
+            res.status(200).json({userListe,count})
+        } catch (error) {
+            res.status(500).json({message: error.message});
+        }
+        }
+
+        module.exports.getAllUsersSortByAge= async (req,res) => {
+            try {
+                const userListe = await userModel.find().sort({age : 1}).limit(2)
+                //const userListe = await userModel.find().sort({age : -1}).limit(2)
+        
+                res.status(200).json({userListe});
+            } catch (error) {
+                res.status(500).json({message: error.message});
+            }
+        }
