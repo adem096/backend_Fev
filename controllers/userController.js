@@ -131,3 +131,49 @@ module.exports.updateuserById = async (req, res) => {
                 res.status(500).json({message: error.message});
             }
         }
+
+        module.exports.getAllUsersAge= async (req,res) => {
+            try {
+                const {age} = req.params
+                const userListe = await userModel.find({ age : age})
+        
+                res.status(200).json({userListe});
+            } catch (error) {
+                res.status(500).json({message: error.message});
+            }
+        }
+
+        module.exports.getAllUsersAgeBetMaxAgeMinAge= async (req,res) => {
+            try {
+                const MaxAge = req.query.MaxAge
+                const MinAge = req.query.MinAge
+                const userListe = await userModel.find({age : { $gt : MinAge , $lt : MaxAge}}).sort({age : 1})
+        
+                res.status(200).json({userListe});
+            } catch (error) {
+                res.status(500).json({message: error.message});
+            }
+        }
+
+        module.exports.getAllClient= async (req,res) => {
+            try {
+    
+                const userListe = await userModel.find({role : "client"})
+        
+                res.status(200).json({userListe});
+            } catch (error) {
+                res.status(500).json({message: error.message});
+            }
+        }
+
+        module.exports.getAllAdmin= async (req,res) => {
+            try {
+    
+                const userListe = await userModel.find({role : "admin"})
+        
+                res.status(200).json({userListe});
+            } catch (error) {
+                res.status(500).json({message: error.message});
+            }
+        }
+    
