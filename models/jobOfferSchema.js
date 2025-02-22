@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const User = require("./userSchema");
 const jobOfferSchema = new mongoose.Schema(
   {
     
@@ -17,7 +18,8 @@ const jobOfferSchema = new mongoose.Schema(
     status: {
         type: String,
         enum: ['Open', 'Closed'],
-        default: 'Open'
+        default: 'Open',
+        users : [{type : mongoose.Schema.Types.ObjectId,ref: 'User'}]
     }
   },
   { timestamps: true }

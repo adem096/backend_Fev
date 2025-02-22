@@ -1,4 +1,5 @@
 const userModel = require('../models/userSchema');
+const jobOfferModel = require('../models/jobOfferSchema');
 
 module.exports.addUserClient = async (req,res) => {
     try {
@@ -76,6 +77,10 @@ module.exports.deleteUserById= async (req,res) => {
         if (!checkIfUserExists) {
           throw new Error("User not found");
         }
+
+        await jobOfferModel.updateMany({user : id},{
+            $unset: { user: 1 },// null "" 
+          });
 
         await userModel.findByIdAndDelete(id)
 

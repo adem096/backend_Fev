@@ -29,7 +29,8 @@ const userSchema = new mongoose.Schema(
     },
     user_image: { type: String, require: false, default: "client.png" },
     age: {type : Number },
-    count: {type : Number, default:'0'}
+    count: {type : Number, default:'0'},
+    jobOffers : [{ type: mongoose.Schema.Types.ObjectId, ref: "JobOffer" }], 
   },
   { timestamps: true }
 );

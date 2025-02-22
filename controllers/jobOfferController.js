@@ -1,5 +1,5 @@
 const jobOfferModel = require('../models/jobOfferSchema');
-
+const userModel = require('../models/userSchema');
 module.exports.getAlljobOffers= async (req,res) => {
     try {
         const jobOfferListe = await jobOfferModel.find()
@@ -99,4 +99,59 @@ module.exports.getJobOfferById = async (req, res) => {
     }
   };
   
+  module.exports.affect = async (req, res) => {
+    try {
+      const { userId, jobOfferId } = req.body;
+  
+      const jobOfferById = await jobOfferModel.findById(jobOfferId);
+  
+      if (!jobOfferById) {
+        throw new Error("job offer introuvable");
+      }
+      const checkIfUserExists = await userModel.findById(userId);
+      if (!checkIfUserExists) {
+        throw new Error("User not found");
+      }
+  
+      await jobOfferModel.findByIdAndUpdate(jobOfferId, {
+        $set: { users: userId },
+      });
+  
+      await userModel.findByIdAndUpdate(userId, {
+        $push: { jobOffers : jobOfferId },
+      });
+  
+      res.status(200).json('affected');
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  };
+
+  module.exports.desaffect = async (req, res) => {
+    try {
+      const { userId, jobOfferId } = req.body;
+  
+      const jobOfferById = await jobOfferModel.findById(jobOfferId);
+  
+      if (!jobOfferById) {
+        throw new Error("job offer introuvable");
+      }
+      const checkIfUserExists = await userModel.findById(userId);
+      if (!checkIfUserExists) {
+        throw new Error("User not found");
+      }
+  
+      await jobOfferModel.findByIdAndUpdate(jobOfferId, {
+        $unset: { users: 1 },
+      });
+  
+      await userModel.findByIdAndUpdate(userId, {
+        $pull: { jobOffers : jobOfferId },
+      });
+  
+      res.status(200).json('desaffected');
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  };
   
