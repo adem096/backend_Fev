@@ -48,7 +48,7 @@ module.exports.addUserAdmin= async (req,res) => {
 
 module.exports.getAllUsers= async (req,res) => {
     try {
-        const userListe = await userModel.find()
+        const userListe = await userModel.find().populate("JobOffer");
 
         res.status(200).json({userListe});
     } catch (error) {
