@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const User = require("./userSchema");
 const departmentSchema = new mongoose.Schema(
   {
     name: {
@@ -24,7 +23,10 @@ const departmentSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+departmentSchema.pre('save', function(next) {
+  this.updatedAt = Date.now();
+  next();
+});
 
-
-const Department = mongoose.model("Department", jobOfferSchema);
+const Department = mongoose.model("Department", departmentSchema);
 module.exports = Department;

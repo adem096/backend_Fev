@@ -1,5 +1,6 @@
 const jobOfferModel = require('../models/jobOfferSchema');
 const userModel = require('../models/userSchema');
+
 module.exports.getAlljobOffers= async (req,res) => {
     try {
         const jobOfferListe = await jobOfferModel.find()
