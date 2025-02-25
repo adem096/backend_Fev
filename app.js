@@ -15,6 +15,7 @@ var usersRouter = require('./routes/usersRouter');
 var osRouter = require('./routes/osRouter');
 var jobOfferRouter = require('./routes/jobOfferRouter');
 var departmentRouter = require('./routes/departmentRouter');
+var GeminiRouter = require('./routes/GeminiRouter');
 
 var app = express();
 
@@ -30,6 +31,7 @@ app.use('/users', usersRouter);
 app.use('/os', osRouter);
 app.use('/jobOffers', jobOfferRouter);
 app.use('/departments', departmentRouter);
+app.use('/Gemini', GeminiRouter);
 
 
 // catch 404 and forward to error handler
