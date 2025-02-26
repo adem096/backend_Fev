@@ -13,11 +13,11 @@ const employeeSchema = new mongoose.Schema({
         type: Date,
         default: Date.now 
     },
-    //departement: {
-        //type: mongoose.Schema.Types.ObjectId,
-       // ref: 'Department', 
-       // required: true
-    //},
+    departement: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Department', 
+        required: true
+    },
     numTel: {
         type: Number,
         required: false 

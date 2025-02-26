@@ -17,7 +17,12 @@ const departmentSchema = new mongoose.Schema(
     updatedAt: {
         type: Date,
         default: Date.now
-    }
+    },
+    employees: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Employee', 
+            required: true
+        },
     
   },
   { timestamps: true }

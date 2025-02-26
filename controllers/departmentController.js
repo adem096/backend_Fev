@@ -1,4 +1,5 @@
 const departmentModel = require('../models/departmentSchema');
+const employeeModel = require("../models/employeeSchema");
 const userModel = require('../models/userSchema');
 
 module.exports.createDepartment = async (req, res) => {
@@ -36,7 +37,7 @@ module.exports.createDepartment = async (req, res) => {
 module.exports.getDepartmentById = async (req, res) => {
     try {
       const id = req.params.id;
-      const department = await departmentModel.findById(id)//.populate("owner");
+      const department = await departmentModel.findById(id).populate("employees");
   
       if (!department || department.length === 0) {
         throw new Error("department introuvable");
