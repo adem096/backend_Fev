@@ -1,5 +1,15 @@
 const userModel = require('../models/userSchema');
 const jobOfferModel = require('../models/jobOfferSchema');
+const User = require('../models/userSchema');
+const jwt = require('jsonwebtoken');
+
+const maxTime = 24 *60 * 60 //24H
+//const maxTime = 1 * 60 //1min
+const createToken = (id) => {
+    return jwt.sign({id},'net secret pfe', {expiresIn: maxTime })
+}
+//67a73ce6ce362ba943c4c9d3 + net secret pfe + 1m
+//eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3Yjc0MjE5ZTFhMTM2OWRlZmZkNzJiMCIsImlhdCI6MTc0MDA2MzI2MCwiZXhwIjoxNzQwNjY4MDYwfQ.38r9wuoAG-Toz_e5yPf1uBdv8bAxgWqU58FaZHUBYeA
 
 module.exports.addUserClient = async (req,res) => {
     try {

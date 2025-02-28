@@ -10,7 +10,7 @@ require("dotenv").config();
 
 const http = require('http');
 
-var indexRouter = require('./routes/indexRouter');
+//var indexRouter = require('./routes/indexRouter');
 var usersRouter = require('./routes/usersRouter');
 var osRouter = require('./routes/osRouter');
 var jobOfferRouter = require('./routes/jobOfferRouter');
@@ -27,7 +27,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
+//app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/os', osRouter);
 app.use('/jobOffers', jobOfferRouter);
