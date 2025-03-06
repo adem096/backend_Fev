@@ -19,7 +19,7 @@ const jobOfferSchema = new mongoose.Schema(
         enum: ['Open', 'Closed'],
         default: 'Open',
     },
-    users : [{type : mongoose.Schema.Types.ObjectId,ref: 'User'}]
+    candidats : [{type : mongoose.Schema.Types.ObjectId,ref: 'User'}]
   },
   { timestamps: true }
 );

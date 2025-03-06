@@ -25,7 +25,7 @@ module.exports.createEmployee = async (req, res) => {
 
 module.exports.getAllEmployees= async (req,res) => {
     try {
-        const EmployeesListe = await employeeModel.find().populate("Department");
+        const EmployeesListe = await employeeModel.find().populate("departement");
 
         res.status(200).json({EmployeesListe});
     } catch (error) {

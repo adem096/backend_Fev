@@ -23,7 +23,7 @@ module.exports.createDepartment = async (req, res) => {
 
   module.exports.getAllDepartments= async (req,res) => {
     try {
-        const departmentsListe = await departmentModel.find()
+        const departmentsListe = await departmentModel.find().populate("employees")
 
         if (!departmentsListe || departmentsListe.length === 0) {
             throw new Error("Aucun departement trouvé");
