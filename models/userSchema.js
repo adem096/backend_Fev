@@ -31,6 +31,7 @@ const userSchema = new mongoose.Schema(
     age: {type : Number },
     count: {type : Number, default:'0'},
     jobOffers : [{ type: mongoose.Schema.Types.ObjectId, ref: "JobOffer" }], 
+    candidatures: [{ type: mongoose.Schema.Types.ObjectId, ref: "Candidature" }],
     /*cv: {
       data: Buffer, // Stocke le fichier PDF sous forme de buffer
       contentType: String // Stocke le type MIME du fichier (ex: 'application/pdf')

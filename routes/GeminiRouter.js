@@ -1,17 +1,17 @@
 const express = require("express");
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+const { GoogleGenerativeAI } = require("@google/generative-ai"); // npm i @google/generative-ai
 
 const router = express.Router();
 
 // Initialisation de l'API Google Generative AI
-const genAI = new GoogleGenerativeAI("AIzaSyDCxln90m3vctUXuAvHwL-sfwssMnst2dI");
+const genAI = new GoogleGenerativeAI("AIzaSyD81176D31dVEfJXQz7unk67eWNQQAjydk"); //https://aistudio.google.com/apikey
 
 // Route pour générer du texte avec Gemini
 router.post("/generate", async (req, res) => {
   try {
     const { prompt } = req.body;
 
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
 
     const result = await model.generateContent(prompt);
     const response = result.response.text(); // Récupérer le texte généré

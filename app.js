@@ -3,10 +3,13 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const session = require("express-session"); //session
+const cors = require("cors");
 
 const {connectToMongoDb} = require("./config/db");
 
 require("dotenv").config();
+const logMiddleware = require('./middlewares/logsMiddlewares.js'); //log
 
 const http = require('http');
 
@@ -17,6 +20,7 @@ var jobOfferRouter = require('./routes/jobOfferRouter');
 var departmentRouter = require('./routes/departmentRouter');
 var GeminiRouter = require('./routes/GeminiRouter');
 var employeeRouter = require('./routes/employeeRouter');
+var candidacyRouter = require('./routes/candidacyRouter');
 
 var app = express();
 
@@ -27,6 +31,24 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(logMiddleware)  //log
+
+app.use(cors({
+  origin:"http://localhost:3000",
+  methods:"GET,POST,PUT,Delete",
+}))
+
+app.use(session({   //cobfig session
+  secret: "net secret pfe",
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    secure: {secure: false},
+    maxAge: 24*60*60,
+  
+  },  
+}))
+
 //app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/os', osRouter);
@@ -34,6 +56,8 @@ app.use('/jobOffers', jobOfferRouter);
 app.use('/departments', departmentRouter);
 app.use('/Gemini', GeminiRouter);
 app.use('/employees', employeeRouter);
+app.use('/candidacy', candidacyRouter);
+
 
 
 // catch 404 and forward to error handler
