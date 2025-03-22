@@ -51,14 +51,14 @@ module.exports.updateEmployee = async (req, res) => {
     try {
         const {id} = req.params
 
-        const checkIfEmployeeExists = await employeeModel.findById(id);
-        if (!checkIfEmployeeExists) {
+        const checkIfUserExists = await employeeModel.findById(id);
+        if (!checkIfUserExists) {
           throw new Error("Employee not found");
         }
 
-       // await jobOfferModel.updateMany({user : id},{
-          //  $unset: { user: 1 },// null "" 
-         // });
+        // await jobOfferModel.updateMany({user : id},{
+        //     $unset: { user: 1 },// null "" 
+        //   });
 
         await employeeModel.findByIdAndDelete(id)
 

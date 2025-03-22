@@ -16,7 +16,7 @@ const employeeSchema = new mongoose.Schema({
     departement: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Department', 
-        required: true
+        required: false
     },
     numTel: {
         type: Number,
