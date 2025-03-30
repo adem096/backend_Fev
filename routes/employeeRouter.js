@@ -9,6 +9,6 @@ router.get('/getEmployeeById/:id', employeeController.getEmployeeById );
 router.put('/updateEmployee/:id', employeeController.updateEmployee );
 router.put('/affectEmployee', employeeController.affectEmployee );
 
-router.delete('/deleteEmployee/:id', employeeController.deleteEmployee );
+router.delete('/deleteEmployeeById/:id', employeeController.deleteEmployeeById );
 
 module.exports = router;

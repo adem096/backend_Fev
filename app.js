@@ -34,9 +34,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(logMiddleware)  //log
 
 app.use(cors({
-  origin:"http://localhost:3000",
-  methods:"GET,POST,PUT,Delete",
-}))
+  origin: 'http://localhost:3000',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'] // Allow DELETE requests
+}));
 
 app.use(session({   //cobfig session
   secret: "net secret pfe",

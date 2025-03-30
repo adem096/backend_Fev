@@ -3,7 +3,7 @@ const userModel = require('../models/userSchema');
 
 module.exports.getAlljobOffers= async (req,res) => {
     try {
-        const jobOfferListe = await jobOfferModel.find().populate("candidats")
+        const jobOfferListe = await jobOfferModel.find()//.populate("candidats")
 
         if (!jobOfferListe || jobOfferListe.length === 0) {
             throw new Error("Aucun offre d'emploi trouvé");

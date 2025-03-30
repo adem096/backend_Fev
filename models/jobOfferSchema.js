@@ -16,7 +16,7 @@ const jobOfferSchema = new mongoose.Schema(
     },
     status: {
         type: String,
-        enum: ['Open', 'Closed'],
+        enum: ['Open', 'Closed', 'Pending'],
         default: 'Open',
     },
     candidats : [{type : mongoose.Schema.Types.ObjectId,ref: 'User'}],

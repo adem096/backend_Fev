@@ -4,15 +4,16 @@ const userModel = require('../models/userSchema');
 
 module.exports.createDepartment = async (req, res) => {
     try {
-      const { name, description} = req.body;
+      const { name, description, nbrEmployes} = req.body;
   
-      if (!name & !description ) {
+      if (!name & !description & !nbrEmployes ) {
         throw new Error("error data");
       }
   
       const department = await departmentModel.create({
         name,
-        description
+        description,
+        nbrEmployes
       });
   
       res.status(200).json({ message: 'Département créé avec succès' });
@@ -54,7 +55,7 @@ module.exports.getDepartmentById = async (req, res) => {
         const { name, description } = req.body;
         const updatedDepartment = await departmentModel.findByIdAndUpdate(
             req.params.id,
-            { name, description },
+            { name, description, nbrEmployes },
             { new: true }
         )//.populate('manager');
         if (!updatedDepartment) {

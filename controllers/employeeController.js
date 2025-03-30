@@ -47,7 +47,7 @@ module.exports.updateEmployee = async (req, res) => {
   }
   }
 
-  module.exports.deleteEmployee= async (req,res) => {
+  module.exports.deleteEmployeeById= async (req,res) => {
     try {
         const {id} = req.params
 

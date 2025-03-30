@@ -10,6 +10,10 @@ const departmentSchema = new mongoose.Schema(
         type: String,
         required: true
     },
+    nbrEmployes: {
+      type: Number ,
+      required: false
+  },
     createdAt: {
         type: Date,
         default: Date.now
@@ -21,7 +25,7 @@ const departmentSchema = new mongoose.Schema(
     employees: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Employee', 
-            required: true
+            required: false
         },
     
   },
