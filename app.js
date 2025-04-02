@@ -20,7 +20,8 @@ var jobOfferRouter = require('./routes/jobOfferRouter');
 var departmentRouter = require('./routes/departmentRouter');
 var GeminiRouter = require('./routes/GeminiRouter');
 var employeeRouter = require('./routes/employeeRouter');
-var candidacyRouter = require('./routes/candidacyRouter');
+var candidacyRouter = require('./routes/candidacyRouter.js');
+
 
 var app = express();
 
@@ -56,7 +57,8 @@ app.use('/jobOffers', jobOfferRouter);
 app.use('/departments', departmentRouter);
 app.use('/Gemini', GeminiRouter);
 app.use('/employees', employeeRouter);
-app.use('/candidacy', candidacyRouter);
+app.use('/candidacies', candidacyRouter);
+
 
 
 

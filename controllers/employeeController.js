@@ -33,6 +33,7 @@ module.exports.getAllEmployees= async (req,res) => {
     }
 }
 
+
 module.exports.updateEmployee = async (req, res) => {
   try {
       const {id} = req.params
