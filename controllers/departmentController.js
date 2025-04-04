@@ -52,7 +52,7 @@ module.exports.getDepartmentById = async (req, res) => {
 
   module.exports.updateDepartment = async (req, res) => {
     try {
-        const { name, description } = req.body;
+        const { name, description, nbrEmployes } = req.body;
         const updatedDepartment = await departmentModel.findByIdAndUpdate(
             req.params.id,
             { name, description, nbrEmployes },

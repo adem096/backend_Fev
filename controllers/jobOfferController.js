@@ -54,9 +54,9 @@ module.exports.getJobOfferById = async (req, res) => {
 
   module.exports.addJobOffer = async (req, res) => {
     try {
-      const { title, description, datePublication, status } = req.body;
+      const { title, description, datePublication, status, department, type } = req.body;
   
-      if (!title & !description & !datePublication & !status) {
+      if (!title & !description & !datePublication & !status & !department  & !type) {
         throw new Error("error data");
       }
   
@@ -64,7 +64,9 @@ module.exports.getJobOfferById = async (req, res) => {
         title,
         description,
         datePublication,
-        status
+        status,
+        department,
+        type,
       });
   
       res.status(200).json({ jobOffer });
@@ -76,7 +78,7 @@ module.exports.getJobOfferById = async (req, res) => {
   module.exports.updateJobOffer = async (req, res) => {
     try {
       const id = req.params.id;
-      const { title, description, datePublication, status } = req.body;
+      const { title, description, datePublication, status, department, type } = req.body;
   
       const jobOfferById = await jobOfferModel.findById(id);
   
@@ -84,12 +86,12 @@ module.exports.getJobOfferById = async (req, res) => {
         throw new Error("Job offer introuvable");
       }
   
-      if (!title & !description & !datePublication & !status) {
+      if (!title & !description & !datePublication & !status & !department & !type) {
         throw new Error("error data");
       }
   
       await jobOfferModel.findByIdAndUpdate(id, {
-        $set: { title, description, datePublication, status },
+        $set: { title, description, datePublication, status, department, type },
       });
   
       const updated = await jobOfferModel.findById(id);

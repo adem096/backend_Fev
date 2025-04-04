@@ -19,6 +19,14 @@ const jobOfferSchema = new mongoose.Schema(
         enum: ['Open', 'Closed', 'Pending'],
         default: 'Open',
     },
+    department: {
+      type: String,
+      enum: ['Logistique', 'Marketing', 'Ressources Humaines', 'Finance', 'IT', 'Sales'],
+  },
+  type: {
+    type: String,
+    enum: ['Full time', 'Part time'],
+},
     candidats : [{type : mongoose.Schema.Types.ObjectId,ref: 'User'}],
     candidatures: [{ type: mongoose.Schema.Types.ObjectId, ref: "Candidature" }]
   },
