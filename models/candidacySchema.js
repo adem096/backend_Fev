@@ -30,6 +30,19 @@ const candidacySchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    phoneNumber: {
+      type: Number,
+      required: true,
+    },
+    experienceYear: {
+      type: Number,
+      required: true,
+    },
+    educationDegree: {
+      type: String,
+      enum: ["Bachelor's degree", "Master's degree", "Baccalaureate degree"],
+      required: true,
+    },
     cv: {
       fileName: String,
       filePath: String,
