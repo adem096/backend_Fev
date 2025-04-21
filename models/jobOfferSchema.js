@@ -8,7 +8,7 @@ const jobOfferSchema = new mongoose.Schema(
     },
     description: {
         type : String, 
-        require: false 
+        require: true 
     },
     datePublication: {
         type : Date, 

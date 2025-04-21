@@ -19,13 +19,24 @@ const employeeSchema = new mongoose.Schema({
         required: false
     },
     numTel: {
-        type: Number,
-        required: false 
+        type: Number, // Store as a number
+        required: [true, 'Phone number is required'],
+        validate: {
+            validator: function (value) {
+                // Ensure the number has exactly 8 digits
+                return /^\d{8}$/.test(value);
+            },
+            message: 'Phone number must contain exactly 8 digits'
+        }
     },
     email: {
         type: String,
-        required: true,
-        unique: true
+        required: [true, 'Email is required'], // Ensures the field is mandatory
+        unique: true, // Ensures the email is unique in the database
+        match: [
+            /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, // Regex for valid email format
+            'Please provide a valid email address' // Error message if validation fails
+        ]
     },
     salaire: {
         type: Number,
