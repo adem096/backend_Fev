@@ -2,7 +2,8 @@ const userModel = require('../models/userSchema');
 const jobOfferModel = require('../models/jobOfferSchema');
 const User = require('../models/userSchema');
 const jwt = require('jsonwebtoken');
-
+const resetCodes = new Map();
+const nodemailer = require('nodemailer');
 const maxTime = 24 *60 * 60 //24H
 //const maxTime = 1 * 60 //1min
 const createToken = (id) => {
@@ -10,6 +11,14 @@ const createToken = (id) => {
 }
 //67a73ce6ce362ba943c4c9d3 + net secret pfe + 1m
 //eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3Yjc0MjE5ZTFhMTM2OWRlZmZkNzJiMCIsImlhdCI6MTc0MDA2MzI2MCwiZXhwIjoxNzQwNjY4MDYwfQ.38r9wuoAG-Toz_e5yPf1uBdv8bAxgWqU58FaZHUBYeA
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASSWORD
+    }
+  });
 
 module.exports.addUserClient = async (req,res) => {
     try {
@@ -213,3 +222,151 @@ module.exports.updateuserById = async (req, res) => {
                 res.status(500).json({message: error.message});
             }
         }
+
+        module.exports.sendResetCode = async (req, res) => {
+            try {
+              const { email } = req.body;
+              console.log('Sending reset code for email:', email);
+              
+              // Check if user exists
+              const user = await userModel.findOne({ email });
+              if (!user) {
+                return res.status(404).json({ 
+                  success: false, 
+                  message: 'User not found' 
+                });
+              }
+          
+              // Generate a 6-digit code
+              const code = Math.floor(100000 + Math.random() * 900000).toString();
+              console.log('Generated code:', code); // For debugging
+              
+              // Store code with timestamp
+              resetCodes.set(email, {
+                code,
+                timestamp: Date.now(),
+                attempts: 0
+              });
+              console.log('Stored reset code data:', resetCodes.get(email));
+          
+              // Send email
+              await transporter.sendMail({
+                from: process.env.EMAIL_USER,
+                to: email,
+                subject: 'Password Reset Code',
+                text: `Your password reset code is: ${code}. This code will expire in 10 minutes.`
+              });
+          
+              res.json({ 
+                success: true, 
+                message: 'Reset code sent successfully' 
+              });
+            } catch (error) {
+              console.error('Send reset code error:', error);
+              res.status(500).json({ 
+                success: false, 
+                message: error.message || 'Failed to send reset code' 
+              });
+            }
+          };
+          
+          module.exports.verifyResetCode = async (req, res) => {
+            try {
+              const { code, email } = req.body;
+              console.log('Verifying code:', { code, email });
+              console.log('Available reset codes:', Array.from(resetCodes.entries()));
+              
+              const storedData = resetCodes.get(email);
+              console.log('Stored data for email:', storedData);
+          
+              if (!storedData) {
+                return res.status(400).json({ 
+                  success: false, 
+                  message: 'No reset code found. Please request a new code.' 
+                });
+              }
+          
+              // Check if code is expired (10 minutes)
+              if (Date.now() - storedData.timestamp > 600000) {
+                resetCodes.delete(email);
+                return res.status(400).json({ 
+                  success: false, 
+                  message: 'Code has expired. Please request a new code.' 
+                });
+              }
+          
+              // Increment attempts
+              storedData.attempts = (storedData.attempts || 0) + 1;
+          
+              // Check maximum attempts (3)
+              if (storedData.attempts >= 3) {
+                resetCodes.delete(email);
+                return res.status(400).json({ 
+                  success: false, 
+                  message: 'Too many attempts. Please request a new code.' 
+                });
+              }
+          
+              if (storedData.code !== code) {
+                return res.status(400).json({ 
+                  success: false, 
+                  message: `Invalid code. ${3 - storedData.attempts} attempts remaining.` 
+                });
+              }
+          
+              // Store verification status
+              storedData.verified = true;
+              resetCodes.set(email, storedData);
+          
+              res.json({ 
+                success: true, 
+                message: 'Code verified successfully' 
+              });
+            } catch (error) {
+              console.error('Verify code error:', error);
+              res.status(500).json({ 
+                success: false, 
+                message: error.message || 'Error verifying code' 
+              });
+            }
+          };
+          
+          module.exports.resetPassword = async (req, res) => {
+            try {
+              const { password, email } = req.body;
+              console.log('Resetting password for email:', email);
+              
+              const storedData = resetCodes.get(email);
+              if (!storedData || !storedData.verified) {
+                return res.status(400).json({ 
+                  success: false, 
+                  message: 'Please verify your email first' 
+                });
+              }
+          
+              const user = await userModel.findOne({ email });
+              if (!user) {
+                return res.status(404).json({ 
+                  success: false, 
+                  message: 'User not found' 
+                });
+              }
+          
+              user.password = password;
+              await user.save();
+              
+              // Clear the reset code after successful password reset
+              resetCodes.delete(email);
+          
+              res.json({ 
+                success: true, 
+                message: 'Password reset successfully' 
+              });
+            } catch (error) {
+              console.error('Reset password error:', error);
+              res.status(500).json({ 
+                success: false, 
+                message: error.message || 'Error resetting password' 
+              });
+            }
+          };

@@ -1,3 +1,5 @@
+// In routes/usersRouter.js
+
 var express = require('express');
 var router = express.Router();
 const userController = require('../controllers/userController');
@@ -19,6 +21,11 @@ router.get('/getAllClient',userController.getAllClient);
 router.get('/getAllAdmin',userController.getAllAdmin); 
 router.put('/updateuserById/:id',userController.updateuserById); 
 router.delete('/deleteUserById/:id',userController.deleteUserById); 
+
+// Add these new routes
+router.post('/send-reset-code', userController.sendResetCode);
+router.post('/verify-reset-code', userController.verifyResetCode);
+router.post('/reset-password', userController.resetPassword);
 
 router.post('/addUserClientWithImg',upload.single("image_user"),userController.addUserClientWithImg);
 
