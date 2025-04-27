@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+
 const candidacySchema = new mongoose.Schema(
   {
     jobTitle: {
@@ -47,7 +48,6 @@ const candidacySchema = new mongoose.Schema(
       fileName: String,
       filePath: String,
     },
-
     dateSoumission: {
       type: Date,
       default: Date.now,
@@ -56,6 +56,12 @@ const candidacySchema = new mongoose.Schema(
       type: String,
       enum: ["Accepted", "Rejected", "Pending"],
       default: "Pending",
+    },
+    interview_date: {
+      type: String, // Store as string; format can be "MM/DD/YYYY" or similar
+    },
+    interview_time: {
+      type: String, // Store as string; format can be "HH:MM AM/PM"
     },
   },
   { timestamps: true }
