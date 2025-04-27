@@ -1,7 +1,10 @@
 const candidacyModel = require("../models/candidacySchema");
-
+const uploadfile = require("../middlewares/uploadfile"); // adjust path if needed
 module.exports.addCandidacy = async (req, res) => {
   try {
+    console.log('req.body:', req.body);
+console.log('req.file:', req.file);
+    // If using uploadfile.single('cv'), req.file will be available
     const {
       jobTitle,
       jobType,
@@ -10,13 +13,20 @@ module.exports.addCandidacy = async (req, res) => {
       firstName,
       lastName,
       address,
-      cv,
       dateSoumission,
       statut,
       experienceYear,
       educationDegree,
       phoneNumber,
     } = req.body;
+
+    let cv = undefined;
+    if (req.file) {
+      cv = {
+        fileName: req.file.filename,
+        filePath: `/files/${req.file.filename}`,
+      };
+    }
 
     const candidacy = await candidacyModel.create({
       jobTitle,
@@ -35,6 +45,7 @@ module.exports.addCandidacy = async (req, res) => {
     });
     res.status(200).json({ candidacy });
   } catch (error) {
+    console.error("Error in addCandidacy:", error);
     res.status(500).json({ message: error.message });
   }
 };
