@@ -11,9 +11,10 @@ const departmentSchema = new mongoose.Schema(
         required: false
     },
     nbrEmployes: {
-      type: Number ,
+      type: Number,
+      default: 0,
       required: false
-  },
+    },
     createdAt: {
         type: Date,
         default: Date.now
@@ -22,12 +23,10 @@ const departmentSchema = new mongoose.Schema(
         type: Date,
         default: Date.now
     },
-    employees: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Employee', 
-            required: false
-        },
-    
+    employees: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Employee'
+    }]
   },
   { timestamps: true }
 );
@@ -36,6 +35,12 @@ departmentSchema.pre('save', function(next) {
   this.updatedAt = Date.now();
   next();
 });
+
+// Method to update employee count
+departmentSchema.methods.updateEmployeeCount = async function() {
+  this.nbrEmployes = this.employees.length;
+  await this.save();
+};
 
 const Department = mongoose.model("Department", departmentSchema);
 module.exports = Department;

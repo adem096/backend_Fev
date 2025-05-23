@@ -4,19 +4,20 @@ const userModel = require('../models/userSchema');
 
 module.exports.createDepartment = async (req, res) => {
     try {
-      const { name, description, nbrEmployes} = req.body;
+      const { name, description } = req.body;
   
-      if (!name & !description & !nbrEmployes ) {
-        throw new Error("error data");
+      if (!name) {
+        throw new Error("Department name is required");
       }
   
       const department = await departmentModel.create({
         name,
         description,
-        nbrEmployes
+        nbrEmployes: 0,
+        employees: []
       });
   
-      res.status(200).json({ message: 'Département créé avec succès' });
+      res.status(200).json({ message: 'Department created successfully', department });
     } catch (error) {
       res.status(500).json({ message: error.message });
     }
@@ -27,8 +28,14 @@ module.exports.createDepartment = async (req, res) => {
         const departmentsListe = await departmentModel.find().populate("employees")
 
         if (!departmentsListe || departmentsListe.length === 0) {
-            throw new Error("Aucun departement trouvé");
+            throw new Error("No departments found");
           }
+
+        // Update employee counts for all departments
+        for (const department of departmentsListe) {
+          await department.updateEmployeeCount();
+        }
+
         res.status(200).json({departmentsListe});
     } catch (error) {
         res.status(500).json({message: error.message});
@@ -40,9 +47,12 @@ module.exports.getDepartmentById = async (req, res) => {
       const id = req.params.id;
       const department = await departmentModel.findById(id).populate("employees");
   
-      if (!department || department.length === 0) {
-        throw new Error("department introuvable");
+      if (!department) {
+        throw new Error("Department not found");
       }
+  
+      // Update employee count
+      await department.updateEmployeeCount();
   
       res.status(200).json(department);
     } catch (error) {
@@ -52,18 +62,28 @@ module.exports.getDepartmentById = async (req, res) => {
 
   module.exports.updateDepartment = async (req, res) => {
     try {
-        const { name, description, nbrEmployes } = req.body;
-        const updatedDepartment = await departmentModel.findByIdAndUpdate(
-            req.params.id,
-            { name, description, nbrEmployes },
-            { new: true }
-        )//.populate('manager');
-        if (!updatedDepartment) {
-            return res.status(404).json({ message: 'Département non trouvé' });
+        const { name, description } = req.body;
+        const department = await departmentModel.findById(req.params.id);
+  
+        if (!department) {
+            return res.status(404).json({ message: 'Department not found' });
         }
-        res.status(200).json({ message: 'Département mis à jour avec succès', departmentModel: updatedDepartment });
+  
+        // Update basic info
+        department.name = name || department.name;
+        department.description = description || department.description;
+  
+        // Update employee count
+        await department.updateEmployeeCount();
+  
+        await department.save();
+  
+        res.status(200).json({ 
+          message: 'Department updated successfully', 
+          department 
+        });
     } catch (error) {
-        res.status(500).json({ message: 'Erreur lors de la mise à jour du département', error });
+        res.status(500).json({ message: 'Error updating department', error });
     }
 };
 
@@ -71,16 +91,17 @@ module.exports.deleteDepartmentById = async (req, res) => {
     try {
       const id = req.params.id;
   
-      const DepartmentById = await departmentModel.findById(id);
+      const department = await departmentModel.findById(id);
   
-      if (!DepartmentById || DepartmentById.length === 0) {
-        throw new Error("Department id introuvable");
+      if (!department) {
+        throw new Error("Department not found");
       }
   
-        
-      //await userModel.updateMany({}, {
-      //    $pull: { jobOffers: id },
-       // });
+      // Remove department reference from all employees
+      await employeeModel.updateMany(
+        { departement: id },
+        { $unset: { departement: 1 } }
+      );
   
       await departmentModel.findByIdAndDelete(id);
   
@@ -92,20 +113,25 @@ module.exports.deleteDepartmentById = async (req, res) => {
 
   module.exports.searchDepartmentByName = async (req, res) => {
     try {
-
         const { name } = req.query
         if(!name){
-            throw new Error("Veuillez fournir un nom pour la recherche.");
+            throw new Error("Please provide a name for search");
         }
 
         const departmentsListe = await departmentModel.find({
             name: {$regex: name , $options: "i"}
-        })
+        }).populate("employees");
 
-        if (!departmentsListe) {
-            throw new Error("Department name is not found");
+        if (!departmentsListe || departmentsListe.length === 0) {
+            throw new Error("No departments found with that name");
           }
-          const count = departmentsListe.length
+
+        // Update employee counts for found departments
+        for (const department of departmentsListe) {
+          await department.updateEmployeeCount();
+        }
+
+        const count = departmentsListe.length
         res.status(200).json({departmentsListe,count})
     } catch (error) {
         res.status(500).json({message: error.message});
