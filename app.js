@@ -14,14 +14,14 @@ const logMiddleware = require('./middlewares/logsMiddlewares.js'); //log
 const http = require('http');
 
 //var indexRouter = require('./routes/indexRouter');
-var usersRouter = require('./routes/usersRouter');
-var osRouter = require('./routes/osRouter');
-var jobOfferRouter = require('./routes/jobOfferRouter');
-var departmentRouter = require('./routes/departmentRouter');
-var GeminiRouter = require('./routes/GeminiRouter');
-var employeeRouter = require('./routes/employeeRouter');
+var usersRouter = require('./routes/usersRouter.js');
+var osRouter = require('./routes/osRouter.js');
+var jobOfferRouter = require('./routes/jobOfferRouter.js');
+var departmentRouter = require('./routes/departmentRouter.js');
+var GeminiRouter = require('./routes/GeminiRouter.js');
+var employeeRouter = require('./routes/employeeRouter.js');
 var candidacyRouter = require('./routes/candidacyRouter.js');
-
+const geminiChatRouter = require('./routes/geminiChatRouter.js');
 
 var app = express();
 
@@ -58,6 +58,7 @@ app.use('/departments', departmentRouter);
 app.use('/Gemini', GeminiRouter);
 app.use('/employees', employeeRouter);
 app.use('/candidacies', candidacyRouter);
+app.use('/gemini-chat', geminiChatRouter);
 
 
 
