@@ -12,6 +12,12 @@ const jobOfferSchema = new mongoose.Schema(
     datePublication: {
       type: Date,
       default: Date.now,
+       validate: {
+      validator: function(value) {
+        return value < Date.now();
+      },
+      message: 'Date must be in the future'
+    }
     },
     status: {
       type: String,
