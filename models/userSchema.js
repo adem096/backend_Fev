@@ -6,6 +6,11 @@ const userSchema = new mongoose.Schema(
         type: String,
         required: true,
         unique: true,
+        minLength: 5,
+        match: [
+          /^(?=.*[a-zA-Z]{5,})[a-zA-Z0-9]*$/,
+          "Username must contain at least 5 alphabetical characters and can include numbers"
+        ]
       },
     email: {
       type: String,
